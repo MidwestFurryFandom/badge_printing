@@ -33,7 +33,7 @@ class Root:
     def print_badges(self, session, minor=''):
         # TODO: make the minor/not minor distinction AC-only?
         badge_list = session.query(Attendee).filter(Attendee.print_pending).order_by(Attendee.badge_num).all()
-        badge_list = [row for row in badge_list if row.age_group_conf['min_age'] < 18] if minor else [row for row in badge_list if row.age_group_conf['min_age'] >= 18]
+        badge_list = [row for row in badge_list if c.AGE_GROUP_CONFIGS[row.age_group]['min_age'] < 18] if minor else [row for row in badge_list if c.AGE_GROUP_CONFIGS[row.age_group]['min_age'] >= 18]
 
         try:
             attendee = badge_list.pop(0)

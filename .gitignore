@@ -14,3 +14,4 @@ workspace.xml
 tasks.xml
 distribute-*.tar.gz
 *.swp
+**/*.DS_Store

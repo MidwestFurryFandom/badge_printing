@@ -59,8 +59,12 @@ class Root:
         except Exception:
             pass
 
-        ribbon = attendee.ribbon_label if attendee.ribbon != c.NO_RIBBON \
-            else ''
+        ribbon = ' / '.join(attendee.ribbon_labels) if attendee.ribbon else ''
+
+        attendee.times_printed += 1
+        attendee.print_pending = False
+        session.add(attendee)
+        session.commit()
 
         return {
             'badge_type': badge_type,

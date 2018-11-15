@@ -36,11 +36,6 @@ class SessionMixin:
         except StopIteration:
             return None
 
-        attendee.times_printed += 1
-        attendee.print_pending = False
-        self.add(attendee)
-        self.commit()
-
         return attendee
 
 

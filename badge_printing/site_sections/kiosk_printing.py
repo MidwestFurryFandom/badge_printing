@@ -46,10 +46,10 @@ class Root:
             'pending':  pending
         }
 
-    def print_badges(self, session, minor=''):
-        attendee = session.get_next_badge_to_print(minor=minor)
+    def print_badges(self, session, minor='', evenOdd=''):
+        attendee = session.get_next_badge_to_print(minor=minor, evenOdd=evenOdd)
         if not attendee:
-            raise HTTPRedirect('badge_waiting?minor={}'.format(minor))
+            raise HTTPRedirect('badge_waiting?minor={}&evenOdd={}'.format(minor, evenOdd))
 
         badge_type = attendee.badge_type_label
 
@@ -59,8 +59,12 @@ class Root:
         except Exception:
             pass
 
-        ribbon = attendee.ribbon_label if attendee.ribbon != c.NO_RIBBON \
-            else ''
+        ribbon = ' / '.join(attendee.ribbon_labels) if attendee.ribbon else ''
+
+        attendee.times_printed += 1
+        attendee.print_pending = False
+        session.add(attendee)
+        session.commit()
 
         return {
             'badge_type': badge_type,
@@ -68,13 +72,15 @@ class Root:
             'badge_num': attendee.badge_num,
             'badge_name': attendee.badge_printed_name,
             'badge': True,
-            'minor': minor
+            'minor': minor,
+            'evenOdd': evenOdd
         }
 
-    def badge_waiting(self, message='', minor=''):
+    def badge_waiting(self, message='', minor='', evenOdd=''):
         return {
             'message': message,
-            'minor': minor
+            'minor': minor,
+            'evenOdd': evenOdd
         }
 
     def reprint_fee(self, session, attendee_id=None, message='',

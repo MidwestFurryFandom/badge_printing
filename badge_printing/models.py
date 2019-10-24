@@ -9,7 +9,7 @@ from uber import utils
 
 @Session.model_mixin
 class SessionMixin:
-    def get_next_badge_to_print(self, minor='', evenOdd=''):
+    def get_next_badge_to_print(self, minor='', printerNumber='', numberOfPrinters=''):
         badge_list = self.query(Attendee) \
             .filter(
             Attendee.print_pending,
@@ -21,14 +21,10 @@ class SessionMixin:
                 attendee = next(badge for badge
                                 in badge_list
                                 if badge.age_now_or_at_con < 18)
-            elif evenOdd == 'e': 
+            elif printerNumber != "" and numberOfPrinters != "": 
                  attendee = next(badge for badge
                                  in badge_list
-                                 if badge.age_now_or_at_con >= 18 and badge.badge_num % 2 == 0)
-            elif evenOdd == 'o':
-                 attendee = next(badge for badge
-                                 in badge_list
-                                 if badge.age_now_or_at_con >= 18 and badge.badge_num % 2 == 1)
+                                 if badge.age_now_or_at_con >= 18 and badge.badge_num % int(numberOfPrinters) == (int(printerNumber) - 1))
             else:
                 attendee = next(badge for badge
                                 in badge_list
@@ -78,3 +74,4 @@ class Attendee:
             else utils.localized_now().date()
         return day.year - self.birthdate.year - (
             (day.month, day.day) < (self.birthdate.month, self.birthdate.day))
+			

@@ -46,10 +46,10 @@ class Root:
             'pending':  pending
         }
 
-    def print_badges(self, session, minor='', evenOdd=''):
-        attendee = session.get_next_badge_to_print(minor=minor, evenOdd=evenOdd)
+    def print_badges(self, session, minor='', printerNumber='', numberOfPrinters=''):
+        attendee = session.get_next_badge_to_print(minor=minor, printerNumber=printerNumber, numberOfPrinters=numberOfPrinters)
         if not attendee:
-            raise HTTPRedirect('badge_waiting?minor={}&evenOdd={}'.format(minor, evenOdd))
+            raise HTTPRedirect('badge_waiting?minor={}&printerNumber={}&numberOfPrinters={}'.format(minor, printerNumber, numberOfPrinters))
 
         badge_type = attendee.badge_type_label
 
@@ -73,14 +73,16 @@ class Root:
             'badge_name': attendee.badge_printed_name,
             'badge': True,
             'minor': minor,
-            'evenOdd': evenOdd
+            'printerNumber': printerNumber,
+            'numberOfPrinters': numberOfPrinters
         }
 
-    def badge_waiting(self, message='', minor='', evenOdd=''):
+    def badge_waiting(self, message='', minor='', printerNumber='', numberOfPrinters=''):
         return {
             'message': message,
             'minor': minor,
-            'evenOdd': evenOdd
+            'printerNumber': printerNumber,
+            'numberOfPrinters': numberOfPrinters
         }
 
     def reprint_fee(self, session, attendee_id=None, message='',
@@ -129,3 +131,4 @@ class Root:
 
         raise HTTPRedirect('../registration/form?id={}&message={}',
                            attendee_id, message)
+						   

@@ -46,7 +46,7 @@ class Attendee:
             if self.has_personalized_badge and not self.badge_num:
                 if self.paid != c.NOT_PAID:
                     self.badge_num = self.session\
-                        .next_badge_num(self.badge_type, old_badge_num=0)
+                        .get_next_badge_num(self.badge_type)
 
     @presave_adjustment
     def print_ready_before_event(self):
